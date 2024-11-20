@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Wallapop</title>
 </head>
 <body>
     <h1>Listado de anuncios</h1>
@@ -16,8 +16,7 @@
                 <a th:href="@{'/view/' + ${anuncio.id}}"
                    th:text="${anuncio.titulo}"></a>
                 <a th:href="@{/del/{id}(id=${anuncio.id})}">borrar</a>
-                <!--Queremos cargar una ruta del tipo: /getProductos/del/3 -->
-                <!--<a th:href="@{/productos/edit/{id}(id=${producto.id})}">editar</a>-->
+                <a th:href="@{/edit/{id}(id=${anuncio.id})}">editar</a>
             </li>
         </ul>
     </div>

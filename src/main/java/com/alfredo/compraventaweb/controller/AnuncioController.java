@@ -62,4 +62,23 @@ public class AnuncioController {
         return "anuncio-view";
     }
 
+    @GetMapping("/edit/{id}")
+    public String editar(Model model, @PathVariable Long id) {
+        Optional<Anuncio> anuncio = anuncioService.obtenerAnuncioPorId(id);
+        if(anuncio.isPresent()){
+            model.addAttribute("anuncio", anuncio.get());
+            return "anuncio-edit";
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String procesarEditar(@Valid Anuncio anuncio, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "anuncio-edit";
+        }
+
+        anuncioService.guardarAnuncio(anuncio);
+        return "redirect:/";
+    }
 }
