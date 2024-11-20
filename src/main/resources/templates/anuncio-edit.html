@@ -2,7 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Editando anuncio</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
 </head>
 <body>
 <form th:action="@{/edit/{id}(id=${anuncio.id})}" method="post" th:object="${anuncio}">
@@ -14,7 +15,37 @@
     <label for="precio">
         Precio:<input id="precio" th:field="*{precio}">
     </label>
-    <input type="submit" value="Enviar anuncio">
+    <label for="descripcion">
+        Descripcion:<input id="descripcion" th:field="*{descripcion}">
+    </label>
+
+    <div class="foto-container">
+        <div th:each="foto : ${anuncio.fotos}"
+             class="foto"
+             th:style="'background-image: url(/imagesAnuncios/' + ${foto.nombre} + ');'">
+            <a th:href="@{/{id1}/fotos/{id2}/delete(id1=${anuncio.id}, id2=${foto.id})}" class="cruz-delete-foto">X</a>
+        </div>
+        <div class="foto" id="nuevaFoto">
+            <i class="fa-regular fa-image"></i>
+        </div>
+    </div>
+
+    <input type="submit" value="Modificar anuncio">
 </form>
+
+<form th:action="@{/edit/{id}/addfoto(id=${anuncio.id})}" method="post" enctype="multipart/form-data" id="formulario-add-foto">
+    <input type="file" name="archivoFoto" class="file-input" id="nuevoArchivo">
+</form>
+
+<script type="text/javascript">
+    document.getElementById("nuevaFoto").addEventListener("click", function () {
+        document.getElementById("nuevoArchivo").click();
+    } );
+
+    document.getElementById("nuevoArchivo").addEventListener("change", function () {
+        document.getElementById("formulario-add-foto").submit();
+    })
+</script>
+
 </body>
 </html>

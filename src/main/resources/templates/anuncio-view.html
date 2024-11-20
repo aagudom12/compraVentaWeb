@@ -2,12 +2,21 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Anuncio visualizado</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
 </head>
 <body>
 
 <p><strong>Titulo:</strong> <span th:text="${anuncio.titulo}"></span></p>
 <p><strong>Precio:</strong> <span th:text="${anuncio.precio}"></span></p>
+<p><strong>Descripcion:</strong> <span th:text="${anuncio.descripcion}"></span></p>
+
+<div class="foto-container">
+    <div th:each="foto : ${anuncio.fotos}"
+         class="foto"
+         th:style="'background-image: url(/imagesAnuncios/' + ${foto.nombre} + ');'">
+    </div>
+</div>
 
 <a th:href="@{/}">Volver atrás</a>
 

@@ -2,10 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Insertar nuevo anuncio</title>
+    <link th:href="@{/css/styles.css}"  rel="stylesheet">
 </head>
 <body>
-    <form th:action="@{/insertar}" method="post" th:object="${anuncio}">
+    <form th:action="@{/insertar}" method="post" th:object="${anuncio}" enctype="multipart/form-data">
         <div th:if="${#fields.hasErrors('titulo')}" class="text-danger" th:errors="*{titulo}">Titulo inválido</div>
         <label for="titulo">
             Titulo:<input id="titulo" th:field="*{titulo}">
@@ -14,7 +15,68 @@
         <label for="precio">
             Precio:<input id="precio" th:field="*{precio}">
         </label>
+        <label for="descripcion">
+            Descripcion:<input id="descripcion" th:field="*{descripcion}">
+        </label>
+
+        <div class="contenedorFotosProductosInsert" >
+            <div class="fotoProductoInsert" onclick="triggerFileInput(this)">
+                <input type="file" name="archivosFotos" class="file-input" accept="image/jpeg, image/png, image/gif, image/webp" onchange="previewImage(this)">
+            </div>
+            <div class="fotoProductoInsert" onclick="triggerFileInput(this)">
+                <input type="file" name="archivosFotos" class="file-input" accept="image/jpeg, image/png, image/gif, image/webp" onchange="previewImage(this)">
+            </div>
+            <div class="fotoProductoInsert" onclick="triggerFileInput(this)">
+                <input type="file" name="archivosFotos" class="file-input" accept="image/jpeg, image/png, image/gif, image/webp" onchange="previewImage(this)">
+            </div>
+        </div>
+
         <input type="submit" value="Enviar anuncio">
     </form>
+
+    <script>
+
+
+        // Abre el cuadro de selección de archivos del input correspondiente
+        function triggerFileInput(caja) {
+            caja.querySelector('.file-input').click();
+        }
+
+        // Previsualiza la imagen seleccionada dentro de la caja
+        function previewImage(input) {
+            const file = input.files[0];
+            const tiposPermitidos = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+            if(file && !tiposPermitidos.includes(file.type)){
+                alert("Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF o WEBP).");
+            }
+            else {
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        let img = input.parentElement.querySelector('img');
+                        // Si ya existe una imagen, la reutilizamos; si no, creamos una nueva
+                        if (!img) {
+                            img = document.createElement('img');
+                            input.parentElement.appendChild(img);
+                        }
+
+                        img.src = e.target.result; // Asigna la imagen como fondo de la caja
+                    };
+
+                    reader.readAsDataURL(file);
+
+
+                } else {    //No ha seleccionado archivo y hay foto la foto
+                    let img = input.parentElement.querySelector('img');
+
+                    if (img) {
+                        img.remove();
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>
