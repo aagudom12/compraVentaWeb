@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form th:action="@{/insertar}" method="post" th:object="${anuncio}">
+        <div th:if="${#fields.hasErrors('titulo')}" class="text-danger" th:errors="*{titulo}">Titulo inválido</div>
+        <label for="titulo">
+            Titulo:<input id="titulo" th:field="*{titulo}">
+        </label>
+        <div th:if="${#fields.hasErrors('precio')}" class="text-danger" th:errors="*{precio}">Precio inválido</div>
+        <label for="precio">
+            Precio:<input id="precio" th:field="*{precio}">
+        </label>
+        <input type="submit" value="Enviar anuncio">
+    </form>
+</body>
+</html>

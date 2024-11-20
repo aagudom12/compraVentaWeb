@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Listado de anuncios</h1>
+    <p>Aqui se verán los anuncios:</p>
+    <a th:href="@{/insertar}">Agregar nuevo anuncio</a>
+
+    <div id="anuncios">
+        <p th:if="${#lists.isEmpty(anuncios)}">No hay anuncios.</p>
+        <ul>
+            <li th:each="anuncio: ${anuncios}">
+                <a th:href="@{'/view/' + ${anuncio.id}}"
+                   th:text="${anuncio.titulo}"></a>
+                <a th:href="@{/del/{id}(id=${anuncio.id})}">borrar</a>
+                <!--Queremos cargar una ruta del tipo: /getProductos/del/3 -->
+                <!--<a th:href="@{/productos/edit/{id}(id=${producto.id})}">editar</a>-->
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,10 +1,16 @@
 package com.alfredo.compraventaweb.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,9 +24,20 @@ public class Anuncio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Double precio;
-
+    @NotEmpty(message = "El titulo es obligatorio")
     private String titulo;
 
+    @NotNull(message = "El precio es obligatorio")
+    private Double precio;
+
     private String descripcion;
+
+    private LocalDate fechaCreacion;
+
+    @OneToMany(targetEntity = Foto.class, cascade = CascadeType.ALL, mappedBy = "anuncio")
+    private List<Foto> fotos = new ArrayList<>();
+
+    @ManyToOne(targetEntity = Usuario.class)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 }

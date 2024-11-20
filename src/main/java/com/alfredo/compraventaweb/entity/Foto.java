@@ -16,10 +16,11 @@ import lombok.NoArgsConstructor;
 public class Foto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     private String nombre;
 
-    private String url;
-
+    @ManyToOne(targetEntity = Anuncio.class)
+    @JoinColumn(name = "anuncio_id")
+    private Anuncio anuncio;
 }
