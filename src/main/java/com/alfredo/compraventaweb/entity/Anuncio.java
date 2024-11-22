@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class Anuncio {
 
     private String descripcion;
 
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 
     @OneToMany(targetEntity = Foto.class, cascade = CascadeType.ALL, mappedBy = "anuncio")
     private List<Foto> fotos = new ArrayList<>();
@@ -40,4 +41,9 @@ public class Anuncio {
     @ManyToOne(targetEntity = Usuario.class)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
+    @PrePersist
+    protected void onCreate() {
+        this.fechaCreacion = LocalDateTime.now(); // Asigna la fecha actual al momento de persistir
+    }
 }

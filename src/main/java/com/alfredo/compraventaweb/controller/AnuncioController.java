@@ -28,7 +28,8 @@ public class AnuncioController {
 
     @GetMapping("/")
     public String listado(Model model) {
-        model.addAttribute("anuncios", anuncioService.obtenerAnuncios());
+        model.addAttribute("anuncios", anuncioService.obtenerAnunciosPorFechaDesc());
+        model.addAttribute("cantidadAnuncios", anuncioService.obtenerCantidadAnuncios());
         return "anuncio-list";
     }
 

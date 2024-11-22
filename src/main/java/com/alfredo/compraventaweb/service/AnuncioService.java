@@ -17,6 +17,10 @@ public class AnuncioService {
         return anuncioRepository.findAll();
     }
 
+    public List<Anuncio> obtenerAnunciosPorFechaDesc() {
+        return anuncioRepository.findAllByOrderByFechaCreacionDesc();
+    }
+
     public void guardarAnuncio(Anuncio anuncio) {
         anuncioRepository.save(anuncio);
     }
@@ -27,5 +31,9 @@ public class AnuncioService {
 
     public Optional<Anuncio> obtenerAnuncioPorId(Long id) {
         return anuncioRepository.findById(id);
+    }
+
+    public long obtenerCantidadAnuncios() {
+        return anuncioRepository.count();
     }
 }
