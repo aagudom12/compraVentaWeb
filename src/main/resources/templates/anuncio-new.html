@@ -4,22 +4,41 @@
     <meta charset="UTF-8">
     <title>Insertar nuevo anuncio</title>
     <link th:href="@{/css/styles.css}"  rel="stylesheet">
+    <!-- Añadimos el enlace a Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
-<body>
-    <form th:action="@{/insertar}" method="post" th:object="${anuncio}" enctype="multipart/form-data">
-        <div th:if="${#fields.hasErrors('titulo')}" class="text-danger" th:errors="*{titulo}">Titulo inválido</div>
-        <label for="titulo">
-            Titulo:<input id="titulo" th:field="*{titulo}">
-        </label>
-        <div th:if="${#fields.hasErrors('precio')}" class="text-danger" th:errors="*{precio}">Precio inválido</div>
-        <label for="precio">
-            Precio:<input id="precio" th:field="*{precio}">
-        </label>
-        <label for="descripcion">
-            Descripcion:<input id="descripcion" th:field="*{descripcion}">
-        </label>
+<body class="bg-light">
 
-        <div class="contenedorFotosProductosInsert" >
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Insertar nuevo anuncio</h2>
+
+    <form th:action="@{/insertar}" method="post" th:object="${anuncio}" enctype="multipart/form-data">
+        <!-- Error de título -->
+        <div th:if="${#fields.hasErrors('titulo')}" class="text-danger mb-3" th:errors="*{titulo}"></div>
+
+        <!-- Título -->
+        <div class="mb-3">
+            <label for="titulo" class="form-label">Título:</label>
+            <input id="titulo" th:field="*{titulo}" class="form-control" placeholder="Ingresa el título del anuncio">
+        </div>
+
+        <!-- Error de precio -->
+        <div th:if="${#fields.hasErrors('precio')}" class="text-danger mb-3" th:errors="*{precio}"></div>
+
+        <!-- Precio -->
+        <div class="mb-3">
+            <label for="precio" class="form-label">Precio:</label>
+            <input id="precio" th:field="*{precio}" class="form-control" placeholder="Ingresa el precio del anuncio">
+        </div>
+
+        <!-- Descripción -->
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción:</label>
+            <textarea id="descripcion" th:field="*{descripcion}" class="form-control" rows="3" placeholder="Ingresa una descripción del anuncio"></textarea>
+        </div>
+
+        <!-- Contenedor de fotos -->
+        <div class="contenedorFotosProductosInsert mb-3">
             <div class="fotoProductoInsert" onclick="triggerFileInput(this)">
                 <input type="file" name="archivosFotos" class="file-input" accept="image/jpeg, image/png, image/gif, image/webp" onchange="previewImage(this)">
             </div>
@@ -31,52 +50,58 @@
             </div>
         </div>
 
-        <input type="submit" value="Enviar anuncio">
+        <!-- Botón de envío -->
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary">Agregar anuncio</button>
+        </div>
     </form>
 
-    <script>
+    <div class="text-center mt-4">
+        <a href="#" class="btn btn-secondary">Volver atrás</a>
+    </div>
+</div>
 
+<!-- Enlace a Bootstrap JS y Popper (para los componentes de Bootstrap) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-        // Abre el cuadro de selección de archivos del input correspondiente
-        function triggerFileInput(caja) {
-            caja.querySelector('.file-input').click();
+<script>
+    // Abre el cuadro de selección de archivos del input correspondiente
+    function triggerFileInput(caja) {
+        caja.querySelector('.file-input').click();
+    }
+
+    // Previsualiza la imagen seleccionada dentro de la caja
+    function previewImage(input) {
+        const file = input.files[0];
+        const tiposPermitidos = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+
+        if(file && !tiposPermitidos.includes(file.type)){
+            alert("Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF o WEBP).");
         }
+        else {
+            if (file) {
+                const reader = new FileReader();
 
-        // Previsualiza la imagen seleccionada dentro de la caja
-        function previewImage(input) {
-            const file = input.files[0];
-            const tiposPermitidos = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-
-            if(file && !tiposPermitidos.includes(file.type)){
-                alert("Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF o WEBP).");
-            }
-            else {
-                if (file) {
-                    const reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        let img = input.parentElement.querySelector('img');
-                        // Si ya existe una imagen, la reutilizamos; si no, creamos una nueva
-                        if (!img) {
-                            img = document.createElement('img');
-                            input.parentElement.appendChild(img);
-                        }
-
-                        img.src = e.target.result; // Asigna la imagen como fondo de la caja
-                    };
-
-                    reader.readAsDataURL(file);
-
-
-                } else {    //No ha seleccionado archivo y hay foto la foto
+                reader.onload = function (e) {
                     let img = input.parentElement.querySelector('img');
-
-                    if (img) {
-                        img.remove();
+                    // Si ya existe una imagen, la reutilizamos; si no, creamos una nueva
+                    if (!img) {
+                        img = document.createElement('img');
+                        input.parentElement.appendChild(img);
                     }
+
+                    img.src = e.target.result; // Asigna la imagen como fondo de la caja
+                };
+
+                reader.readAsDataURL(file);
+            } else { // No ha seleccionado archivo y hay foto
+                let img = input.parentElement.querySelector('img');
+                if (img) {
+                    img.remove();
                 }
             }
         }
-    </script>
+    }
+</script>
 </body>
 </html>

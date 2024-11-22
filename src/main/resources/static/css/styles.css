@@ -60,3 +60,33 @@
     border:1px solid #333;
     background-color: rgba(0, 0, 0, 0.4);
 }
+
+
+/* Estilos personalizados */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/*.foto {
+    width: 100%;
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}*/
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #000; /* Iconos más visibles */
+}
+
+.btn-secondary {
+    background-color: #007bff; /* Color azul para el botón */
+    border-color: #0056b3;
+}
+
+.btn-secondary:hover {
+    background-color: #0056b3;
+}

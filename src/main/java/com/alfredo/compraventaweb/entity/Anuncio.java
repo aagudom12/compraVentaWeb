@@ -33,6 +33,7 @@ public class Anuncio {
 
     private String descripcion;
 
+    @Column(nullable = false,updatable = false)
     private LocalDateTime fechaCreacion;
 
     @OneToMany(targetEntity = Foto.class, cascade = CascadeType.ALL, mappedBy = "anuncio")
