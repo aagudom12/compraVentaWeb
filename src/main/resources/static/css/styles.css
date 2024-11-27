@@ -1,3 +1,59 @@
+/* Asegúrate de que el nav se comporta correctamente */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilo para el contenedor del formulario */
+.login-form {
+    margin-left: auto; /* Empuja el formulario al extremo derecho */
+    display: flex;
+    align-items: center;
+}
+
+/* Ajustes del formulario */
+.login-form form {
+    display: flex;
+    gap: 10px; /* Espaciado entre los elementos del formulario */
+    align-items: center;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 150px; /* Ajusta el tamaño de los campos */
+    padding: 5px;
+    font-size: 0.9rem;
+}
+
+.login-form input[type="submit"] {
+    padding: 5px 15px;
+    font-size: 0.9rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo para el enlace de cerrar sesión */
+#logoutEnlace {
+    color: #ffffff; /* Color blanco para hacerlo visible sobre el azul */
+    font-weight: bold; /* Resalta el enlace con texto en negrita */
+    text-decoration: none; /* Elimina el subrayado */
+}
+
+/* Cambia el color al pasar el cursor por encima */
+#logoutEnlace:hover {
+    color: #f8d210; /* Amarillo brillante al hacer hover */
+    text-decoration: underline; /* Añade subrayado para énfasis */
+}
+
+
 .foto-container {
     display: flex; /* Para alinear las capas horizontalmente */
     flex-wrap: wrap; /* Para permitir que las capas salten a la siguiente línea */
