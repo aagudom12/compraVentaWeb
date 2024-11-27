@@ -39,8 +39,8 @@ public class Anuncio {
     @OneToMany(targetEntity = Foto.class, cascade = CascadeType.ALL, mappedBy = "anuncio")
     private List<Foto> fotos = new ArrayList<>();
 
-    @ManyToOne(targetEntity = Usuario.class)
-    @JoinColumn(name = "usuario_id")
+    @ManyToOne(targetEntity = Usuario.class, optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @PrePersist

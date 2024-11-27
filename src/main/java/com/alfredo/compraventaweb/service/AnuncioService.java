@@ -1,6 +1,7 @@
 package com.alfredo.compraventaweb.service;
 
 import com.alfredo.compraventaweb.entity.Anuncio;
+import com.alfredo.compraventaweb.entity.Usuario;
 import com.alfredo.compraventaweb.repository.AnuncioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,4 +37,9 @@ public class AnuncioService {
     public long obtenerCantidadAnuncios() {
         return anuncioRepository.count();
     }
+
+    public List<Anuncio> obtenerAnunciosPorUsuario(Usuario usuario) {
+        return anuncioRepository.findByUsuario(usuario);
+    }
+
 }

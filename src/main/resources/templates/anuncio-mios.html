@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Anuncios</title>
+  <link th:href="@{/css/styles.css}"  rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+<body>
+<header class="bg-primary text-white p-3 mb-4">
+  <div class="container">
+    <h1 class="mb-0">Mis Anuncios</h1>
+    <nav class="mt-2">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/}">Anuncios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/misAnuncios}">Mis anuncios</a>
+        </li>
+        <!--<li class="nav-item">
+          <a class="nav-link text-white" th:classappend="${#httpServletRequest.requestURI == '/anuncios' ? ' active' : ''}" href="/anuncios">Anuncios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:classappend="${#httpServletRequest.requestURI == '/mis-anuncios' ? ' active' : ''}" href="/mis-anuncios">Mis anuncios</a>
+        </li>-->
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <p class="mb-0">Mis anuncios en Wallapop:</p>
+    <a class="btn btn-success" th:href="@{/insertar}">Agregar nuevo anuncio</a>
+  </div>
+
+  <div id="anuncios" class="row">
+    <!-- Mostrar mensaje si no hay anuncios -->
+    <p class="text-center text-muted" th:if="${#lists.isEmpty(anuncios)}">No tienes anuncios.</p>
+
+    <!-- Recorrer los anuncios -->
+    <div class="col-md-4 mb-4" th:each="anuncio: ${anuncios}">
+      <div class="card h-100">
+        <div class="card-img-top">
+          <!-- Mostrar la primera imagen o una imagen por defecto -->
+          <img class="img-fluid" th:if="${#lists.size(anuncio.fotos) > 0}" th:src="@{'/imagesAnuncios/' + ${anuncio.fotos[0].nombre}}" alt="Imagen del anuncio" />
+          <img class="img-fluid" th:if="${#lists.size(anuncio.fotos) == 0}" src="/images/default.png" alt="Imagen por defecto" />
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">
+            <a class="text-decoration-none" th:href="@{'/view/' + ${anuncio.id}}" th:text="${anuncio.titulo}"></a>
+          </h5>
+          <p class="card-text" th:text="'Precio: ' + ${anuncio.precio}"></p>
+        </div>
+        <div class="card-footer text-end">
+            <a class="btn btn-outline-danger btn-sm" th:href="@{/del/{id}(id=${anuncio.id})}">Borrar</a>
+            <a class="btn btn-outline-primary btn-sm" th:href="@{/edit/{id}(id=${anuncio.id})}">Editar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="bg-dark text-white text-center py-3 mt-4">
+  <p>Wallapop - Tu lugar de compra y venta</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

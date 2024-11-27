@@ -1,10 +1,7 @@
 package com.alfredo.compraventaweb.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,9 +28,9 @@ public class Usuario {
 
     @NotNull(message = "La contraseña es obligatoria")
     @Column(length = 500)
+    @Size(min = 4, message = "Debe contener al menos 4 caracteres")
     private String password;
 
-    @NotBlank(message = "El nombre no puede estar vacío")
     @Size(max = 255, message = "El nombre no puede exceder los 255 caracteres")
     private String nombre;
 

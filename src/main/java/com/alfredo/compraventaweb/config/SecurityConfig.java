@@ -30,14 +30,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/", "/imagesAnuncios/**", "/css/**", "/view/*", "/nuevoUsuario").permitAll()
+                                .requestMatchers("/insertar", "/edit/**", "/del/**").authenticated() // Rutas protegidas
                                 .anyRequest().authenticated()   /* Por ejemplo para la URL "/productos/new" habría que estar autenticado con cualquier ROL */
                 )
                 .formLogin(
                         form -> form
-                                .loginPage("/")
+                                .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/", true)
-                                .failureUrl("/?errorLogin")
+                                .failureUrl("/login?error")
                                 .permitAll()
                 )
                 .logout(logout -> logout

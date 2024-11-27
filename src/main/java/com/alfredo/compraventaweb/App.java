@@ -9,9 +9,6 @@ public class App {
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
-        String password = "1234"; // La contraseña sin cifrar
-        String encodedPassword = new BCryptPasswordEncoder().encode(password);
-        System.out.println(encodedPassword);
     }
 
 }

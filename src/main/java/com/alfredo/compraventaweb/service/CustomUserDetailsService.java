@@ -35,4 +35,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public void guardarUsuario(Usuario usuario) {
         usuarioRepository.save(usuario);
     }
+
+    public Optional<Usuario> comprobarUsuarioPorEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
 }

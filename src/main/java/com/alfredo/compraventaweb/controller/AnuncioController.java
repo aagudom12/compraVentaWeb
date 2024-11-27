@@ -1,7 +1,9 @@
 package com.alfredo.compraventaweb.controller;
 
 import com.alfredo.compraventaweb.entity.Anuncio;
+import com.alfredo.compraventaweb.entity.Usuario;
 import com.alfredo.compraventaweb.service.AnuncioService;
+import com.alfredo.compraventaweb.service.CustomUserDetailsService;
 import com.alfredo.compraventaweb.service.FotoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,17 +22,39 @@ public class AnuncioController {
 
     private AnuncioService anuncioService;
     private FotoService fotoService;
+    private CustomUserDetailsService usuarioService;
 
     @Autowired
-    public AnuncioController(AnuncioService anuncioService, FotoService fotoService) {
+    public AnuncioController(AnuncioService anuncioService, FotoService fotoService, CustomUserDetailsService usuarioService) {
         this.anuncioService = anuncioService;
         this.fotoService = fotoService;
+        this.usuarioService = usuarioService;
     }
 
-    @GetMapping("/")
+    /*@GetMapping("/")
     public String listado(Model model) {
         model.addAttribute("anuncios", anuncioService.obtenerAnunciosPorFechaDesc());
         model.addAttribute("cantidadAnuncios", anuncioService.obtenerCantidadAnuncios());
+        return "anuncio-list";
+    }*/
+
+    @GetMapping("/")
+    public String listado(Model model, Principal principal) {
+        if (principal != null) { // Usuario autenticado
+            model.addAttribute("anuncios", anuncioService.obtenerAnunciosPorFechaDesc());
+            model.addAttribute("cantidadAnuncios", anuncioService.obtenerCantidadAnuncios());
+            return "anuncio-list";
+        }
+        return "redirect:/login"; // Redirige a la página de login si no está autenticado
+    }
+
+    @GetMapping("/mis-anuncios")
+    public String listarMisAnuncios(Model model, Principal principal) {
+        String emailUsuario = principal.getName();
+        Usuario usuario = usuarioService.comprobarUsuarioPorEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        model.addAttribute("anuncios", anuncioService.obtenerAnunciosPorUsuario(usuario));
         return "anuncio-list";
     }
 
@@ -40,9 +65,22 @@ public class AnuncioController {
     }
 
     @PostMapping("/insertar")
-    public String procesarInsertar(@Valid Anuncio anuncio, BindingResult bindingResult, @RequestParam(value = "archivosFotos", required = false) List<MultipartFile> fotos, Model model) {
+    public String procesarInsertar(@Valid Anuncio anuncio, BindingResult bindingResult, @RequestParam(value = "archivosFotos", required = false) List<MultipartFile> fotos, Model model, Principal principal) {
         if(bindingResult.hasErrors()){
             return "anuncio-new";
+        }
+
+        // Obtener el usuario autenticado
+        String emailUsuario = principal.getName();
+        Usuario usuario = usuarioService.comprobarUsuarioPorEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Asignar el usuario al anuncio
+        anuncio.setUsuario(usuario);
+        usuario.getAnuncios().add(anuncio);
+
+        if (usuario.getId() == null) {
+            throw new RuntimeException("El usuario autenticado no tiene un ID válido.");
         }
 
         //Guardar fotos
@@ -57,11 +95,31 @@ public class AnuncioController {
         return "redirect:/";
     }
 
-    @GetMapping("/del/{id}")
+    /*@GetMapping("/del/{id}")
     public String eliminar(@PathVariable Long id) {
         anuncioService.eliminarAnuncio(id);
         return "redirect:/";
+    }*/
+
+    @GetMapping("/del/{id}")
+    public String eliminar(@PathVariable Long id, Principal principal) {
+        // Obtener el usuario autenticado
+        String emailUsuario = principal.getName();
+        Usuario usuario = usuarioService.comprobarUsuarioPorEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Verificar que el anuncio pertenece al usuario
+        Anuncio anuncio = anuncioService.obtenerAnuncioPorId(id)
+                .orElseThrow(() -> new RuntimeException("Anuncio no encontrado"));
+
+        if (!anuncio.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("No tienes permiso para eliminar este anuncio");
+        }
+
+        anuncioService.eliminarAnuncio(id);
+        return "redirect:/";
     }
+
 
     @GetMapping("/view/{id}")
     public String ver(@PathVariable Long id, Model model) {
@@ -70,8 +128,9 @@ public class AnuncioController {
             model.addAttribute("anuncio", anuncio.get());
             return "anuncio-view";
         }
-        return "anuncio-view";
+        return "redirect:/error";
     }
+
 
     @GetMapping("/edit/{id}")
     public String editar(Model model, @PathVariable Long id) {
@@ -83,7 +142,7 @@ public class AnuncioController {
         return "redirect:/";
     }
 
-    @PostMapping("/edit/{id}")
+    /*@PostMapping("/edit/{id}")
     public String procesarEditar(@Valid Anuncio anuncio, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             return "anuncio-edit";
@@ -91,5 +150,63 @@ public class AnuncioController {
 
         anuncioService.guardarAnuncio(anuncio);
         return "redirect:/";
+    }*/
+
+    /*@PostMapping("/edit/{id}")
+    public String procesarEditar(@PathVariable Long id, @Valid Anuncio anuncio, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "anuncio-edit";
+        }
+
+        // Recuperar el anuncio original de la base de datos
+        Anuncio anuncioOriginal = anuncioService.obtenerAnuncioPorId(id)
+                .orElseThrow(() -> new RuntimeException("Anuncio no encontrado"));
+
+        // Mantener el usuario original
+        anuncio.setUsuario(anuncioOriginal.getUsuario());
+
+        // Guardar el anuncio editado
+        anuncioService.guardarAnuncio(anuncio);
+
+        return "redirect:/";
+    }*/
+
+    @PostMapping("/edit/{id}")
+    public String procesarEditar(@PathVariable Long id, @Valid Anuncio anuncio, BindingResult bindingResult, Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "anuncio-edit";
+        }
+
+        // Recuperar el anuncio original
+        Anuncio anuncioOriginal = anuncioService.obtenerAnuncioPorId(id)
+                .orElseThrow(() -> new RuntimeException("Anuncio no encontrado"));
+
+        // Verificar que el usuario autenticado es el dueño del anuncio
+        String emailUsuario = principal.getName();
+        if (!anuncioOriginal.getUsuario().getEmail().equals(emailUsuario)) {
+            throw new RuntimeException("No tienes permiso para editar este anuncio");
+        }
+
+        // Mantener el usuario original
+        anuncio.setUsuario(anuncioOriginal.getUsuario());
+
+        // Guardar el anuncio editado
+        anuncioService.guardarAnuncio(anuncio);
+
+        return "redirect:/";
     }
+
+    @GetMapping("/misAnuncios")
+    public String verMisAnuncios(Model model, Principal principal) {
+        String emailUsuario = principal.getName();
+        Usuario usuario = usuarioService.comprobarUsuarioPorEmail(emailUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        List<Anuncio> anuncios = anuncioService.obtenerAnunciosPorUsuario(usuario);
+        model.addAttribute("anuncios", anuncios);
+
+        return "anuncio-mios"; // vista para los anuncios del usuario
+    }
+
+
 }
