@@ -31,21 +31,16 @@ public class AnuncioController {
         this.usuarioService = usuarioService;
     }
 
-    /*@GetMapping("/")
-    public String listado(Model model) {
-        model.addAttribute("anuncios", anuncioService.obtenerAnunciosPorFechaDesc());
-        model.addAttribute("cantidadAnuncios", anuncioService.obtenerCantidadAnuncios());
-        return "anuncio-list";
-    }*/
-
     @GetMapping("/")
     public String listado(Model model, Principal principal) {
-        if (principal != null) { // Usuario autenticado
-            model.addAttribute("anuncios", anuncioService.obtenerAnunciosPorFechaDesc());
-            model.addAttribute("cantidadAnuncios", anuncioService.obtenerCantidadAnuncios());
-            return "anuncio-list";
+        model.addAttribute("anuncios", anuncioService.obtenerAnunciosPorFechaDesc());
+        model.addAttribute("cantidadAnuncios", anuncioService.obtenerCantidadAnuncios());
+
+        // Si el usuario está autenticado, agrega información adicional al modelo
+        if (principal != null) {
+            model.addAttribute("usuario", principal.getName());
         }
-        return "redirect:/login"; // Redirige a la página de login si no está autenticado
+        return "anuncio-list";
     }
 
     @GetMapping("/mis-anuncios")
@@ -95,12 +90,6 @@ public class AnuncioController {
         return "redirect:/";
     }
 
-    /*@GetMapping("/del/{id}")
-    public String eliminar(@PathVariable Long id) {
-        anuncioService.eliminarAnuncio(id);
-        return "redirect:/";
-    }*/
-
     @GetMapping("/del/{id}")
     public String eliminar(@PathVariable Long id, Principal principal) {
         // Obtener el usuario autenticado
@@ -141,35 +130,6 @@ public class AnuncioController {
         }
         return "redirect:/";
     }
-
-    /*@PostMapping("/edit/{id}")
-    public String procesarEditar(@Valid Anuncio anuncio, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
-            return "anuncio-edit";
-        }
-
-        anuncioService.guardarAnuncio(anuncio);
-        return "redirect:/";
-    }*/
-
-    /*@PostMapping("/edit/{id}")
-    public String procesarEditar(@PathVariable Long id, @Valid Anuncio anuncio, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "anuncio-edit";
-        }
-
-        // Recuperar el anuncio original de la base de datos
-        Anuncio anuncioOriginal = anuncioService.obtenerAnuncioPorId(id)
-                .orElseThrow(() -> new RuntimeException("Anuncio no encontrado"));
-
-        // Mantener el usuario original
-        anuncio.setUsuario(anuncioOriginal.getUsuario());
-
-        // Guardar el anuncio editado
-        anuncioService.guardarAnuncio(anuncio);
-
-        return "redirect:/";
-    }*/
 
     @PostMapping("/edit/{id}")
     public String procesarEditar(@PathVariable Long id, @Valid Anuncio anuncio, BindingResult bindingResult, Principal principal) {

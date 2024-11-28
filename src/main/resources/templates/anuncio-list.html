@@ -18,32 +18,23 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" th:href="@{/}">Anuncios</a>
                 </li>
-                <!-- Anuncios
-                <li class="nav-item">
-                    <a class="nav-link text-white" th:classappend="${#httpServletRequest.requestURI == '/' ? ' active' : ''}" href="/">Anuncios</a>
-                </li>-->
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" th:href="@{/misAnuncios}">Mis anuncios</a>
-                </li>
-                <!-- Mis anuncios
-                <li class="nav-item">
-                    <a class="nav-link text-white" th:classappend="${#httpServletRequest.requestURI == '/mis-anuncios' ? ' active' : ''}" href="/mis-anuncios">Mis anuncios</a>
-                </li>-->
+                <th:block sec:authorize="isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" th:href="@{/misAnuncios}">Mis anuncios</a>
+                    </li>
+                </th:block>
 
             </ul>
             <div class="login-form">
                 <th:block sec:authorize="isAnonymous()">
-                    <!--<form th:action="@{/login}" method="post" class="d-flex">
-                        <input type="text" name="username" placeholder="Username" class="form-control me-2" />
-                        <input type="password" name="password" placeholder="Password" class="form-control me-2" />
-                        <input type="submit" value="Log in" class="btn btn-light" />
-                    </form>-->
                     <ul class="nav">
                         <li class="nav-item">
                             <form th:action="@{/login}" method="post" class="d-flex align-items-center">
                                 <input type="text" name="username" placeholder="Username" class="form-control me-2" />
                                 <input type="password" name="password" placeholder="Password" class="form-control me-2" />
+                                <input type="checkbox" name="remember-me" id="remember-me" class="form-check-input me-1" />
+                                <label for="remember-me" class="form-check-label me-3">Recordarme</label>
                                 <input type="submit" value="Log in" class="btn btn-primary" />
                             </form>
                         </li>
@@ -87,10 +78,6 @@
                     </h5>
                     <p class="card-text" th:text="'Precio: ' + ${anuncio.precio}"></p>
                 </div>
-                <!--<div class="card-footer text-end">
-                    <a class="btn btn-outline-danger btn-sm" th:href="@{/del/{id}(id=${anuncio.id})}">Borrar</a>
-                    <a class="btn btn-outline-primary btn-sm" th:href="@{/edit/{id}(id=${anuncio.id})}">Editar</a>
-                </div>-->
             </div>
         </div>
     </div>

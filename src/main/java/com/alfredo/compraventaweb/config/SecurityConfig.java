@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers("/", "/imagesAnuncios/**", "/css/**", "/view/*", "/nuevoUsuario").permitAll()
-                                .requestMatchers("/insertar", "/edit/**", "/del/**").authenticated() // Rutas protegidas
+                                .requestMatchers("/insertar", "/edit/**", "/del/**", "/misAnuncios").authenticated() // Rutas protegidas
                                 .anyRequest().authenticated()   /* Por ejemplo para la URL "/productos/new" habría que estar autenticado con cualquier ROL */
                 )
                 .formLogin(
@@ -45,7 +45,12 @@ public class SecurityConfig {
                         .logoutUrl("/logout") // URL para el logout
                         .logoutSuccessUrl("/") // URL de redirección después de logout
                         .permitAll()
-                ) ;
+                )
+                .rememberMe(rememberMe -> rememberMe
+                        .tokenValiditySeconds(432000) // 5 días (en segundos)
+                        .key("miLlaveSecretaParaRecordar") // Clave secreta para proteger la cookie
+                        .rememberMeParameter("remember-me") // Nombre del parámetro del formulario
+                );
 
 
         return http.build();
