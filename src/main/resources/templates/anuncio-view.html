@@ -16,9 +16,23 @@
     <!-- Detalles del anuncio -->
     <div class="card mb-4">
         <div class="card-body">
-            <p><strong>Titulo:</strong> <span th:text="${anuncio.titulo}"></span></p>
-            <p><strong>Precio:</strong> <span th:text="${anuncio.precio}"></span></p>
-            <p><strong>Descripcion:</strong> <span th:text="${anuncio.descripcion}"></span></p>
+            <p><strong>Título:</strong> <span th:text="${anuncio.titulo}"></span></p>
+            <p><strong>Precio:</strong> $<span th:text="${anuncio.precio}"></span></p>
+            <p><strong>Descripción:</strong> <span th:text="${anuncio.descripcion}"></span></p>
+            <p><strong>Fecha de creación:</strong> <span th:text="${anuncio.fechaCreacion}"></span></p>
+        </div>
+    </div>
+
+    <!-- Información del usuario -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5>Datos del Usuario</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Nombre:</strong> <span th:text="${anuncio.usuario.nombre}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${anuncio.usuario.email}"></span></p>
+            <p><strong>Teléfono:</strong> <span th:text="${anuncio.usuario.telefono}"></span></p>
+            <p><strong>Población:</strong> <span th:text="${anuncio.usuario.poblacion}"></span></p>
         </div>
     </div>
 
@@ -52,3 +66,4 @@
 
 </body>
 </html>
+
