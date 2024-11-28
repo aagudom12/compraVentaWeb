@@ -95,6 +95,11 @@ public class FotoService {
         Path ruta = Paths.get(UPLOADS_DIRECTORY + File.separator + nuevoNombreFoto);
         //Movemos el archivo a la carpeta y guardamos su nombre en el objeto catgoría
         try {
+            // Crear el directorio si no existe
+            if (!Files.exists(ruta.getParent())) {
+                Files.createDirectories(ruta.getParent());
+            }
+
             byte[] contenido = file.getBytes();
             Files.write(ruta, contenido);
         } catch (
@@ -107,7 +112,9 @@ public class FotoService {
         Optional<Foto> fotoProductoOptional = fotoRepository.findById(idFoto);
         if(fotoProductoOptional.isPresent()){
             Foto fotoAnuncio = fotoProductoOptional.get();
-            Path archivoFoto = Paths.get(fotoAnuncio.getNombre());
+            //Path archivoFoto = Paths.get(fotoAnuncio.getNombre());
+
+            Path archivoFoto = Paths.get(UPLOADS_DIRECTORY, fotoAnuncio.getNombre());
             try {
                 Files.deleteIfExists(archivoFoto);
             } catch (IOException e) {
